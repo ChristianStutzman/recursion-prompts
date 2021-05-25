@@ -32,21 +32,66 @@ var sum = function(array) {
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  var count = 0;
+  for (var i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])) {
+      count += arraySum(array[i])
+      continue;
+    }
+    count += array[i];
+  }
+  return count;
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  var newNumber = Math.abs(n - 2);
+  if (newNumber === 0) {
+    return true;
+  } else if (newNumber === 1) {
+    return false;
+  } else {
+    return isEven(newNumber);
+  }
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+  var isNegative = false;
+  var count = 0
+  if (n < 0) {
+    isNegative = true;
+  }
+  var n = Math.abs(n);
+  if (n === 0) {
+    return 0;
+  } else {
+    count += (n-1);
+    if (isNegative) {
+     return -(count + sumBelow(n-1));
+    } else {
+      return (count + sumBelow(n-1));
+    }
+  }
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  var result = [];
+  if (y - x === 0 || Math.abs(y - x) === 1) {
+    return result;
+  } else {
+    if (y < x) {
+      result.push(x-1);
+      return result.concat(range(x-1, y));
+    } else {
+    result.push(x+1);
+    return result.concat(range(x+1, y));
+    }
+  }
 };
 
 // 7. Compute the exponent of a number.
