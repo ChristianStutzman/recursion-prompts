@@ -100,6 +100,14 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+  if (exp === 0) {
+    return 1;
+  } else if (exp < 0) {
+    var exp = exp * -1;
+    return 1/exponent(base, exp);
+  } else {
+    return base * exponent(base, exp - 1);
+  }
 };
 
 // 8. Determine if a number is a power of two.
@@ -107,14 +115,43 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  if (n === 1) {
+    return true;
+  } else {
+    var x = n/2;
+    if (x < 2 && x > 1 || x === 0) {
+      return false;
+    } else{
+      return powerOfTwo(x);
+    }
+  }
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  var result = [];
+  if (!Array.isArray(string)) {
+    var string = string.split('');
+  }
+  if (string.length === 0) {
+    return result.join('');
+  }
+  result.push(string[string.length - 1]);
+  return result.concat(reverse(string.slice(0, string.length - 1))).join('');
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+  var string = string.toLowerCase().split(' ').join('');
+  if (string.length <= 1) {
+    return true;
+  }
+  var firstLetter = string[0];
+  var lastLetter = string[string.length - 1];
+  if (firstLetter === lastLetter) {
+    return palindrome(string.slice(1, string.length - 1));
+  }
+  return false;
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -196,11 +233,41 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+  var count = 0;
+  for (key in obj) {
+    if (typeof obj[key] === 'object') {
+      count += countValuesInObj(obj[key], value);
+    } else {
+      if (obj[key] === value) {
+        count++;
+      }
+    }
+  }
+  return count;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+  // for (key in obj) {
+  //   if (typeof obj[key] === 'object') {
+  //     replaceKeysInObj(obj[key], oldKey, newKey);
+  //   } else if (key === oldKey) {
+  //     obj[newKey] = obj[oldKey];
+  //     delete obj[oldKey];
+  //   }
+  // }
+  // return obj;
+  var result = {};
+  for (key in obj) {
+    if (key === oldKey) {
+      obj[newKey] = obj[oldKey];
+      delete obj[oldKey];
+    } else if (typeof obj[key] === 'object') {
+      result[key] = replaceKeysInObj(obj[key], oldKey, newKey);
+    }
+  }
+  return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
